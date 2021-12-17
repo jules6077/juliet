@@ -1,0 +1,417 @@
+# standard preamble
+import numpy as np
+import scipy as sp
+from scipy import stats
+import matplotlib.pyplot as plt
+import math
+from random import randint
+%matplotlib inline
+
+wheel = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 
+         27, 13, 11, 30, 8, 23, 10, 5, 24, 16, 33, 
+         1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 
+         35, 3, 26]
+
+startSlot_rand = randint(0,37)
+vInit_rand = randint(1,4)
+
+def wheel_generator(wheelList, startSlot, grav, vInit):
+      
+    wheelDiameter = .80                 #m
+    wheelCirc = wheelDiameter * np.pi
+    slotDist = wheelCirc / len(wheelList)
+    tilt = np.pi / 8                    #radians
+    frictMu = 0.2                       #unitless
+    acc = grav * np.sin(tilt)           #m/s^2
+    distTrav = (3 / 2) * vInit ** 2 / (frictMu * acc)
+
+    numSlots = int(distTrav / slotDist) + startSlot
+    #print("num slots def: ", numSlots)
+    
+    while(numSlots > len(wheelList)):
+        numSlots -= len(wheelList)
+    
+    #print("num slots after def: ", numSlots)
+    return numSlots - 1
+    #return distTrav
+
+game_prac = wheel_generator(wheel, startSlot_rand, 9.8, vInit_rand)
+print("Where ball lands: ", wheel_generator(wheel, startSlot_rand, 9.8, vInit_rand))
+index = wheel.index(wheel_generator(wheel, startSlot_rand, 9.8, vInit_rand))
+print("index: ", index)
+print("Starting slot: ", startSlot_rand)
+print("Initial Velocity: ", vInit_rand, "m/s")
+
+grav = 9.8
+wheelDiameter = .80                 #m
+wheelCirc = wheelDiameter * np.pi
+slotDist = wheelCirc / len(wheel)
+tilt = np.pi / 8                    #radians
+frictMu = 0.2                       #unitless
+acc = grav * np.sin(tilt)           #m/s^2
+distTrav = (3 / 2) * vInit_rand ** 2 / (frictMu * acc)
+
+numberSlots = int(distTrav / slotDist) + startSlot_rand
+
+print("Number of slots: ", numberSlots)
+
+# Import libraries
+from matplotlib import pyplot as plt
+import numpy as np
+%matplotlib inline
+ 
+# Creating dataset
+blocks = ['0', '32', '15', '19', '4', '21', '2', '25', '17', '34', '6', 
+          '27', '13', '11', '30', '8', '23', '10', '5', '24', '16', '33', 
+          '1', '20', '14', '31', '9', '22', '18', '29', '7', '28', '12', 
+          '35', '3', '26']
+
+blocks_number = 36
+degree_of_circle = 360
+each_slot = degree_of_circle/blocks_number
+
+data_list = []
+for i in range(0, blocks_number):
+    data_list.append(each_slot)
+
+#print(data_list)
+#print(len(data_list))    
+
+# Creating plot
+print("We want to create a roulette board, so we start with a pie chart:")
+fig = plt.figure(figsize =(10, 7))
+plt.pie(data_list, labels = blocks)
+# show plot
+plt.show()
+
+#lets make this rotate
+explode = []
+for i in range(0, blocks_number):
+    explode.append(0)
+
+#print("explode:", explode)
+
+print("We can make the chart rotate 90 degrees:")
+fig1, ax1 = plt.subplots()
+ax1.pie(data_list, explode=explode, labels=blocks,
+        shadow=True, startangle=90)
+plt.show()
+
+#now rotate:
+print("Similarly, we can make the chart rotate 10 degrees")
+fig1, ax1 = plt.subplots()
+
+ax1.pie(data_list, explode=explode, labels=blocks,
+        shadow=True, startangle=10)
+ 
+plt.show()
+
+print("There are 36 slots on the board and a full circle is 360 degrees. "
+      "Thus, if we rotate 10 degrees continuously, we have a rotating "
+     "roulette board which passes one slot for each rotation. This is "
+     "very important for the next step.")
+     
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+from IPython.display import display,HTML
+from random import randint
+%matplotlib agg
+
+# Creating dataset
+blocks = ['0', '32', '15', '19', '4', '21', '2', '25', '17', '34', '6', 
+          '27', '13', '11', '30', '8', '23', '10', '5', '24', '16', '33', 
+          '1', '20', '14', '31', '9', '22', '18', '29', '7', '28', '12', 
+          '35', '3', '26']
+
+blocks_number = 36
+degree_of_circle = 360
+each_slot = degree_of_circle/blocks_number
+
+data_list = []
+for i in range(0, blocks_number):
+    data_list.append(each_slot)
+    
+explode = []
+for i in range(0, blocks_number):
+    explode.append(0)
+    
+colors = []
+
+for i in range(0, blocks_number):
+    if (i%2 == 0 or i == 0):
+        colors.append('white')
+    else:
+        colors.append('black')
+        
+#print(colors)
+#print(len(colors))
+
+fig2, ax2 = plt.subplots()
+
+def update(j):
+    ax2.clear()
+    ax2.axis('equal')
+    ax2.pie(data_list, explode=explode, labels=blocks, colors=colors, 
+            shadow=True, startangle=10*j)
+    if (j == numberSlots - 1):
+        colors[index] = 'red'
+        ax2.pie(data_list, explode=explode, labels=blocks, colors=colors, 
+            shadow=True, startangle=10*j)
+    ax2.set_title(j + 1)
+
+anim = FuncAnimation(fig2, update, frames=range(numberSlots), repeat=False)
+display(HTML(anim.to_jshtml()))
+
+print("With the following initial conditions,")
+print()
+
+print("Starting slot: ", startSlot_rand)
+print("Initial Velocity: ", vInit_rand, "m/s")
+
+print()
+print("The ball passes ", numberSlots, " slots.")
+print("And the ball lands on slot number: ", game_prac)
+
+#update wheel back to original colors:
+if (index%2 == 0 or index == 0):
+    colors[index] = 'white'
+    ax2.pie(data_list, explode=explode, labels=blocks, colors=colors)
+else:
+    colors[index] = 'black'
+    ax2.pie(data_list, explode=explode, labels=blocks, colors=colors)
+    
+#stadart premiable
+import numpy as np
+import scipy as sp
+from scipy import stats
+import matplotlib.pyplot as plt
+import math
+from random import randint
+%matplotlib agg
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+from IPython.display import display,HTML
+from random import randint
+
+#update wheel back to original colors:
+for i in range(0, blocks_number):
+    if (i%2 == 0 or i == 0):
+        colors.append('white')
+    else:
+        colors.append('black')
+        
+if (index%2 == 0 or index == 0):
+    colors[index] = 'white'
+    ax2.pie(data_list, explode=explode, labels=blocks, colors=colors)
+else:
+    colors[index] = 'black'
+    ax2.pie(data_list, explode=explode, labels=blocks, colors=colors)
+#Now we will make a this someone user interactive and focues on the stats
+#of winning
+
+computer_guess = randint(0,37)
+
+index_estimate = [index -2, index -1, index, index + 1, index +2]
+
+print(index_estimate)
+
+#estimate the ball will land within 5 blocks of the game simulation
+#our program uses initial conditions to accurately predict where
+#the ball will land, but let's say it is not always going to be 
+#correct in the real world, thus, we must estimate that the ball will
+#land somwhere in the region of the simulated block. 2 blocks to the left
+#2 blocks to the right of the real position
+estimate = randint(0,5) #picks random number from 0 to 4
+
+#print(estimate)
+
+can_land = index_estimate[estimate]
+#print(can_land)
+
+estimated_guess = wheel[can_land]
+#print ("estimated guess: ", estimated_guess)
+#this should be at about 20% accurate
+
+#get a guess from the user:
+
+human = input("Make a bet! Pick a number from 0 - 36: ")
+
+#print(human)
+
+#input validation
+while (int(human) < 0 or int(human) > 36):
+    human = input("You need to input a number from 0 - 36. Try again: ")
+
+print("Let's see how you do:")
+
+startSlot_rand2 = randint(0,37)
+vInit_rand2 = randint(1,1)
+
+game1 = wheel_generator(wheel, startSlot_rand2, 9.8, vInit_rand2)
+
+index = wheel.index(game1)
+#print("index: ", index)
+
+grav = 9.8
+wheelDiameter = .80                 #m
+wheelCirc = wheelDiameter * np.pi
+slotDist = wheelCirc / len(wheel)
+tilt = np.pi / 8                    #radians
+frictMu = 0.2                       #unitless
+acc = grav * np.sin(tilt)           #m/s^2
+distTrav = (3 / 2) * vInit_rand2 ** 2 / (frictMu * acc)
+
+numberSlots = int(distTrav / slotDist) + startSlot_rand2
+
+#print("Number of slots: ", numberSlots)
+
+anim = FuncAnimation(fig2, update, frames=range(numberSlots), repeat=False)
+display(HTML(anim.to_jshtml()))
+
+print("With the following initial conditions,")
+print()
+
+print("Starting slot: ", startSlot_rand2)
+print("Initial Velocity: ", vInit_rand2, "m/s")
+
+print()
+print("The ball passes ", numberSlots2, " slots.")
+print("And the ball lands on slot number: ", game1)
+
+print()
+if human == game1:
+    print("You won!!")
+else:
+    print("You lost:(")
+    
+# Import libraries
+from matplotlib import pyplot as plt
+import numpy as np
+%matplotlib inline
+
+#we have computer_guess, estimate_guess and human
+
+#Now we will run through 1000 games and find stats on winners
+
+human_win_loop = []
+comp_win_loop = []
+estimate_win_loop = []
+for i in range(0, 1001):
+    games = []  #gonnna make a list of 1000 games, so 1000 slots in list
+    for i in range(0, 1001):
+        startSlot_rand3 = randint(0,37)
+        vInit_rand3 = randint(1,5)
+        games.append(wheel_generator(wheel, startSlot_rand3, 9.8, vInit_rand3))
+    #print(games)
+
+    estimated_guess = []
+    for i in range(0, 1001):
+        index = wheel.index(games[i])
+        if index == 34:
+            index_estimate = [32,33,34,35,0]
+        elif index == 35:
+            index_estimate = [33,34,35,0,1]
+        elif index == 0:
+            index_estimate = [34,35,0,1,2]
+        elif index == 1:
+            index_estimate = [35,0,1,2,3]
+        else:
+            index_estimate = [index -2, index -1, index, index + 1, index +2]
+        estimate = randint(0,4)
+        can_land = index_estimate[estimate]
+        #print(can_land)
+        estimated_guess.append(wheel[can_land])
+    #print(estimated_guess)
+
+    human_guess = []
+    for i in range(0, 1001):
+        human_guess.append(human)
+    #print(human_guess)
+
+    computer_guess = []
+    for i in range(0,1001):
+        computer_guess.append(randint(0,36))
+    #print(computer_guess)
+
+    estimated_wins = 0
+    human_wins = 0
+    computer_wins = 0
+    for i in range(0, 1001):
+        if (games[i] == estimated_guess[i]):
+            estimated_wins += 1
+        if (games[i] == 6): #say human guesses 6 1000 times
+            human_wins += 1
+        if (games[i] == computer_guess[i]):
+            computer_wins += 1
+    #print("Estimated Wins: ", estimated_wins)
+    #print("Human Wins: ", human_wins)
+    #print("Computer Wins: ", computer_wins)
+    human_win_loop.append(human_wins)
+    comp_win_loop.append(computer_wins)
+    estimate_win_loop.append(estimated_wins)
+#print(human)
+#print(human_win_loop)
+#print(comp_win_loop)
+#print(estimate_win_loop)
+
+%matplotlib agg
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+from IPython.display import display,HTML
+
+fig, ax = plt.subplots()
+
+def update(j, *fargs):
+    ax.clear()
+    bar_x = [1,2,3]
+    bar_height = [estimate_win_loop[j], comp_win_loop[j], human_win_loop[j]]
+    
+    est = (estimate_win_loop[j]/1000)*100
+    com = (comp_win_loop[j]/1000)*100
+    hu = (human_win_loop[j]/1000)*100
+    
+    bar_tick_label = ['Estimated: {:.1f} %'.format(est),'Computer: {:.1f} %'.format(com),'Human: {:.1f} %'.format(hu)]
+    bar_plot = ax.bar(bar_x,bar_height,tick_label=(bar_tick_label))
+    plt.title('Estimated Guess vs Computer Guess vs Human Guess')
+    plt.ylim([0,250])
+    plt.ylabel("Number Of Wins Out of 1000")
+    ax.set_title(j + 1)
+    
+
+anim = FuncAnimation(fig, update, frames=range(1000), fargs=(estimate_win_loop, comp_win_loop, human_win_loop) ,repeat=False)
+display(HTML(anim.to_jshtml()))
+
+
+%matplotlib inline
+
+#find average:
+hu_average = np.mean(human_win_loop)
+com_average = np.mean(comp_win_loop)
+est_average = np.mean(estimate_win_loop)
+
+print("In general, here are the average winnings for the computer, estimator, and human playing.")
+print()
+print("Human wins about {:.4}".format(hu_average)," times per 1000 games played")
+print("Computer, or random number generator, wins about {:.4}".format(com_average), 
+      "times per 1000 games played")
+print("Estimated value wins about {:.5}".format(est_average),"times per 1000 games played")
+
+fig, ax = plt.subplots()
+
+bar_x = [1,2,3]
+bar_height = [est_average, com_average, hu_average]
+bar_tick_label = ['Estimated','Computer','Human']
+bar_label = ["{:.1f} %".format((est_average/1000)*100), "{:.1f} %".format((com_average/1000)*100), "{:.1f} %".format((hu_average/1000)*100)]
+
+bar_plot = plt.bar(bar_x,bar_height,tick_label=bar_tick_label, label = bar_label)
+
+autolabel(bar_plot)
+
+plt.title('Average: Estimated Guess vs Computer Guess vs Human Guess')
+plt.ylim([0,250])
+plt.ylabel("Number Of Wins Out of 1000")
+
+plt.show()
+
+print("Where the percentages represent how often the player wins.")
+
